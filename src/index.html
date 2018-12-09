@@ -6,10 +6,17 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-    canvas{background: #eee}
+    html,body{height: 100%;}
+    body{display: flex;align-items: center;justify-content: center;flex-direction: column}
+    canvas{background: #eee;}
   </style>
 </head>
 <body>
+  <div>
+    <h5 id="stateButton"></h5>
+    <button id="moveButton">移动</button>
+    <button id="rectButton">矩形</button>
+  </div>
   <canvas id="canvas" width="800" height="300"></canvas>
   <script type="text/javascript" src="./easeljs.min.js"></script>
   <script type="text/javascript" src="./index.js" charset="utf-8"></script>
