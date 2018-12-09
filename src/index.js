@@ -5,6 +5,8 @@ let container = new createjs.Container()
 let tempContainer = new createjs.Container()
 // 记录
 let records = []
+// 缓存base64
+let baseUrl = ''
 stage.addChild(container)
 stage.addChild(tempContainer)
 createjs.Touch.enable(stage) //允许设备触控
@@ -21,10 +23,27 @@ let tempRect = {
   moveX:0,
   moveY:0,
 }
-
+function getBase64Image(src,fn){
+  var img = document.createElement('img')
+  img.crossOrigin = '';
+  img.src = src
+  img.onload=function(){
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+    var dataURL = canvas.toDataURL("image/png");
+    // return 
+    fn(dataURL)
+  }
+  
+  // return dataURL.replace("data:image/png;base64,", "");
+}
 
 let append = function(src,fn){
   let image = new Image()
+  image.crossOrigin = '';
   image.src = src
   image.onload=function(){
     let img = new createjs.Bitmap(this)
@@ -67,7 +86,7 @@ let insertRect = function(){
 let insertRectB = function(){
   tempContainer.removeAllChildren()
   container.removeAllChildren()
-  append('./test.jpg',function(){
+  append('http://p1.qhimgs4.com/t0142306e875d3a2fff.jpg',function(){
     records.forEach(tempRect => {
       
       if(tempRect.type == 'rect'){
@@ -201,4 +220,13 @@ backButton.onclick = function(){
 moveButton.click()
 
 
-append('./test.jpg')
+append('http://p1.qhimgs4.com/t0142306e875d3a2fff.jpg')
+// append('./test.jpg')
+
+// getBase64Image('http://p1.qhimgs4.com/t0142306e875d3a2fff.jpg',function(base){
+//   // console.log(base)
+//   if(baseUrl == ''){
+//     baseUrl = base
+//   }
+//   append(baseUrl)
+// })
