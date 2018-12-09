@@ -7,7 +7,7 @@ let tempContainer = new createjs.Container()
 let records = []
 stage.addChild(container)
 stage.addChild(tempContainer)
-createjs.Touch.enable(stage)
+createjs.Touch.enable(stage) //允许设备触控
 let reader = new FileReader()
 createjs.Ticker.setFPS(60);  
 // 缩放值
@@ -15,6 +15,7 @@ let s = 1
 // 缩放速度
 let n = 0.02;
 let tempRect = {
+  type:'',
   x:0,
   y:0,
   moveX:0,
@@ -44,31 +45,45 @@ let inserText= function({x,y,txt}){
 }
 let insertRect = function(){
   tempContainer.removeAllChildren()
-  let shape = new createjs.Shape()
-  shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.x,tempRect.y).lineTo(tempRect.x,tempRect.moveY)
-  tempContainer.addChild(shape)
-  shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.x,tempRect.moveY).lineTo(tempRect.moveX,tempRect.moveY)
-  tempContainer.addChild(shape)
-  shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.moveX,tempRect.moveY).lineTo(tempRect.moveX,tempRect.y)
-  tempContainer.addChild(shape)
-  shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.moveX,tempRect.y).lineTo(tempRect.x,tempRect.y)
-  tempContainer.addChild(shape)
-  stage.update()
+  
+  if(tempRect.type == 'rect'){
+    let shape = new createjs.Shape()
+    shape.graphics.beginStroke("red").setStrokeStyle(1).drawRect(tempRect.x,tempRect.y,tempRect.moveX-tempRect.x,tempRect.moveY-tempRect.y);
+    tempRect.type = 'rect';
+    tempContainer.addChild(shape);
+
+    stage.update()
+  } 
+  if(tempRect.type == 'line'){
+    let shape = new createjs.Shape()
+    shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.x,tempRect.y).lineTo(tempRect.moveX,tempRect.moveY)
+    tempRect.type = 'line';
+    tempContainer.addChild(shape)
+    
+    stage.update()
+  }
+  
 }
 let insertRectB = function(){
   tempContainer.removeAllChildren()
   // container.removeAllChildren()
   // append('./test.jpg')
   records.forEach(tempRect => {
-    let shape = new createjs.Shape()
-    shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.x,tempRect.y).lineTo(tempRect.x,tempRect.moveY)
-    container.addChild(shape)
-    shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.x,tempRect.moveY).lineTo(tempRect.moveX,tempRect.moveY)
-    container.addChild(shape)
-    shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.moveX,tempRect.moveY).lineTo(tempRect.moveX,tempRect.y)
-    container.addChild(shape)
-    shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.moveX,tempRect.y).lineTo(tempRect.x,tempRect.y)
-    container.addChild(shape)
+    
+    if(tempRect.type == 'rect'){
+      let shape = new createjs.Shape()
+      shape.graphics.beginStroke("red").setStrokeStyle(1).drawRect(tempRect.x,tempRect.y,tempRect.moveX-tempRect.x,tempRect.moveY-tempRect.y);
+      tempRect.type = 'rect';
+      container.addChild(shape);
+      console.log(shape,88);
+    }
+    if(tempRect.type == 'line'){
+      let shape = new createjs.Shape()
+      shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.x,tempRect.y).lineTo(tempRect.moveX,tempRect.moveY)
+      tempRect.type = 'line';
+      container.addChild(shape)
+      
+    }
   })
   stage.update()
 }
@@ -98,7 +113,16 @@ stage.addEventListener('mousedown',function(e){
   tempRect.y=e.stageY
   tempRect.moveX=e.stageX
   tempRect.moveY=e.stageY
-  insertRect()
+  if(stateButton.innerText == '矩形'){
+    tempRect.type = 'rect'
+    insertRect();
+  } 
+  if(stateButton.innerText == '直线'){
+    tempRect.type = 'line'
+    insertRect();
+  }
+  
+ 
 })
 stage.addEventListener('pressmove',function(e){
   if(stateButton.innerText == '移动'){
@@ -109,7 +133,14 @@ stage.addEventListener('pressmove',function(e){
   }
   tempRect.moveX=e.stageX
   tempRect.moveY=e.stageY
-  insertRect()
+  if(stateButton.innerText == '矩形'){
+    tempRect.type = 'rect'
+    insertRect();
+  } 
+  if(stateButton.innerText == '直线'){
+    tempRect.type = 'line'
+    insertRect();
+  }
 })
 stage.addEventListener('pressup',function(e){
   if(stateButton.innerText == '移动'){
@@ -122,8 +153,18 @@ stage.addEventListener('pressup',function(e){
     y:(tempRect.y-container.y)/s,
     moveX:(tempRect.moveX-container.x)/s,
     moveY:(tempRect.moveY-container.y)/s,
+    type:tempRect.type
   })
-  insertRectB()
+  if(stateButton.innerText == '矩形'){
+    tempRect.type = 'rect'
+    insertRectB()
+  } 
+  if(stateButton.innerText == '直线'){
+    tempRect.type = 'line'
+    insertRectB()
+  }
+  
+  console.log(records, 99);
 })
 
 
@@ -147,6 +188,9 @@ moveButton.onclick=function(){
   stateButton.innerText = this.innerText
 }
 rectButton.onclick=function(){
+  stateButton.innerText = this.innerText
+}
+lineButton.onclick = function(){
   stateButton.innerText = this.innerText
 }
 moveButton.click()
