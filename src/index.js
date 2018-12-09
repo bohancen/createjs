@@ -122,6 +122,7 @@ let insertRectB = function(){
 let cX = 0
 let cY = 0
 stage.addEventListener('mousedown',function(e){
+  console.log(e.stageX)
   cX = e.stageX -container.x
   cY = e.stageY -container.y
   if(stateButton.innerText == '移动'){
