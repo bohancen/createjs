@@ -66,26 +66,27 @@ let insertRect = function(){
 }
 let insertRectB = function(){
   tempContainer.removeAllChildren()
-  // container.removeAllChildren()
-  // append('./test.jpg')
-  records.forEach(tempRect => {
-    
-    if(tempRect.type == 'rect'){
-      let shape = new createjs.Shape()
-      shape.graphics.beginStroke("red").setStrokeStyle(1).drawRect(tempRect.x,tempRect.y,tempRect.moveX-tempRect.x,tempRect.moveY-tempRect.y);
-      tempRect.type = 'rect';
-      container.addChild(shape);
-      console.log(shape,88);
-    }
-    if(tempRect.type == 'line'){
-      let shape = new createjs.Shape()
-      shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.x,tempRect.y).lineTo(tempRect.moveX,tempRect.moveY)
-      tempRect.type = 'line';
-      container.addChild(shape)
+  container.removeAllChildren()
+  append('./test.jpg',function(){
+    records.forEach(tempRect => {
       
-    }
+      if(tempRect.type == 'rect'){
+        let shape = new createjs.Shape()
+        shape.graphics.beginStroke("red").setStrokeStyle(1).drawRect(tempRect.x,tempRect.y,tempRect.moveX-tempRect.x,tempRect.moveY-tempRect.y);
+        tempRect.type = 'rect';
+        container.addChild(shape);
+        console.log(shape,88);
+      }
+      if(tempRect.type == 'line'){
+        let shape = new createjs.Shape()
+        shape.graphics.beginStroke("red").setStrokeStyle(1).moveTo(tempRect.x,tempRect.y).lineTo(tempRect.moveX,tempRect.moveY)
+        tempRect.type = 'line';
+        container.addChild(shape)
+        
+      }
+    })
+    stage.update()
   })
-  stage.update()
 }
 
 
@@ -192,6 +193,10 @@ rectButton.onclick=function(){
 }
 lineButton.onclick = function(){
   stateButton.innerText = this.innerText
+}
+backButton.onclick = function(){
+  records.pop()
+  insertRectB()
 }
 moveButton.click()
 
