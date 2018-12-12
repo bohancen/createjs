@@ -155,6 +155,11 @@ async function createCanvas(pic_url){
     records.pop()
     insertRectB()
   }
+  saveButton.onclick = function(){
+    let base64 = canvas.toDataURL("image/png");
+    let win = window.open()
+    win.document.body.innerHTML = `<img src="${base64}" alt=""/>`
+  }
   moveButton.click()
 }
 createCanvas('http://p1.qhimgs4.com/t0142306e875d3a2fff.jpg')
